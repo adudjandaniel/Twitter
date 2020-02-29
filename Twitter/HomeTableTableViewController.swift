@@ -18,10 +18,13 @@ class HomeTableTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loadTweets()
-        
         myRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
         tableView.refreshControl = myRefreshControl
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweets()
     }
     
     
@@ -45,6 +48,7 @@ class HomeTableTableViewController: UITableViewController {
             
         }, failure: { (Error) in
             print("Could not load tweets")
+            print(Error)
         })
     }
     
@@ -100,6 +104,11 @@ class HomeTableTableViewController: UITableViewController {
         if let imageData = data {
             cell.profileImageView.image = UIImage(data: imageData)
         }
+        
+        cell.setFavorite(tweetsArray[indexPath.row]["favorited"] as! Bool)
+        print(tweetsArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId = tweetsArray[indexPath.row]["id"] as! Int
+        cell.retweeted = tweetsArray[indexPath.row]["retweeted"] as! Bool
         
         return cell
         
